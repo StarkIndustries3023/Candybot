@@ -15,8 +15,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveMode;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -47,6 +49,8 @@ public class Drivetrain extends SubsystemBase {
   private final GenericEntry vEntry = 
     Shuffleboard.getTab("Drive").add("Drive V", Constants.Drive_V).getEntry();
 
+  private final SendableChooser<DriveMode> driveModeChooser = new SendableChooser<>();
+
   
 
   /** Creates a new Drivetrain. */
@@ -62,6 +66,13 @@ public class Drivetrain extends SubsystemBase {
 
     config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     leftMotor.getConfigurator().apply(config);
+
+
+
+    driveModeChooser.setDefaultOption("Curvature", DriveMode.CURVATURE);
+    driveModeChooser.addOption("Voltage", DriveMode.VOLTAGE);
+
+    Shuffleboard.getTab("Drive").add("Drive Mode", driveModeChooser);
   }
 
   @Override
@@ -82,7 +93,7 @@ public class Drivetrain extends SubsystemBase {
    * @param throttle velocity of robot centroid
    * @param curvature curvature in 1/m
    */
-  public void drive(double throttle, double curvature){
+  public void driveCurvature(double throttle, double curvature){
     double velocity = throttle * Constants.MAX_SPEED;
     double omega = velocity * curvature * Constants.MAX_CURVATURE;
     
@@ -109,6 +120,19 @@ public class Drivetrain extends SubsystemBase {
     rightMotor.setVoltage(voltageRight);
   }
 
+  /**
+   * Drive in percent output mode
+   * @param leftSpeed left motor percent output
+   * @param rightSpeed right motor percent outpu
+   */
+  public void driveDutyCycle(double leftSpeed, double rightSpeed){
+    leftMotor.set(leftSpeed);
+    rightMotor.set(rightSpeed);
+  }
+
+  /**
+   * Refreshes the PID values if they have changed on the Network Tables
+   */
   public void resetPID(){
     Slot0Configs config = new Slot0Configs();
     config.kP = pEntry.getDouble(Constants.DRIVE_P);
@@ -118,6 +142,14 @@ public class Drivetrain extends SubsystemBase {
     leftMotor.getConfigurator().apply(config);
     rightMotor.getConfigurator().apply(config);
 
+  }
+
+  /**
+   * Gives the selected drive mode from the Network tables
+   * @return the selected mode
+   */
+  public DriveMode getDriveMode(){
+    return driveModeChooser.getSelected();
   }
   
 }

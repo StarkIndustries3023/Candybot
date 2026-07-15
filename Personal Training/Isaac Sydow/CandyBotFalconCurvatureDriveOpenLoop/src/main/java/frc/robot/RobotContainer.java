@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.JoystickDrive;
-import frc.robot.Commands.VoltageTest;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Spinner;
 
@@ -20,7 +19,6 @@ public class RobotContainer {
   CommandXboxController controller = new CommandXboxController(0);
 
   JoystickDrive joystickDrive = new JoystickDrive(drivetrain, spinner, controller);
-  VoltageTest voltageTest = new VoltageTest(drivetrain, controller);
 
   public RobotContainer() {
     configureBindings();
@@ -28,7 +26,6 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    controller.leftBumper().whileTrue(voltageTest);
 
     controller.back().onTrue(Commands.runOnce(drivetrain::resetPID, drivetrain));
   }

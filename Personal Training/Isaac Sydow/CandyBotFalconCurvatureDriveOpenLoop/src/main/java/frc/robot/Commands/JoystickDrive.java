@@ -6,6 +6,7 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.DriveMode;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Spinner;
 
@@ -30,7 +31,16 @@ public class JoystickDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.drive(controller.getLeftY() * -1, controller.getRightX() * -1);
+    DriveMode mode = drivetrain.getDriveMode();
+
+    if(mode == DriveMode.CURVATURE){
+      drivetrain.driveCurvature(controller.getLeftY() * -1, controller.getRightX() * -1);
+    }else if(mode == DriveMode.VOLTAGE){
+      double leftVolts = controller.getLeftY() * -1;
+      double rightVolts = controller.getRightY() * -1;
+      drivetrain.driveRaw(leftVolts, rightVolts);
+    }
+    
     spinner.setSpeed(controller.getRightTriggerAxis());
   }
 

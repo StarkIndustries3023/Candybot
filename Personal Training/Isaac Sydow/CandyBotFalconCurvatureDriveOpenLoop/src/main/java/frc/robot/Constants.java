@@ -21,4 +21,12 @@ public class Constants {
     public static final double DRIVE_S = 0.0;
 
     public static final double MAX_VOLTAGE_TEST = 2;
+
+
+
+    public enum DriveMode{
+        CURVATURE,
+        VOLTAGE
+    }
 }
+
