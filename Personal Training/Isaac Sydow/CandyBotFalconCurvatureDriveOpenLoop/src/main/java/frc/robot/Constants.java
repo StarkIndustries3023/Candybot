@@ -9,18 +9,18 @@ import edu.wpi.first.math.util.Units;
 /** Add your docs here. */
 public class Constants {
 
-    public static final double MAX_SPEED = 1; // in m/s
+    public static final double MAX_SPEED = 2; // in m/s
     public static final double TRACK_WIDTH = Units.inchesToMeters(20); // m
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(10); // ft
     public static final double DRIVE_GEAR_RATIO = 10;
-    public static final double MAX_CURVATURE = 2; // 1/m
+    public static final double MAX_CURVATURE = 1.5; // 1/m
 
 
-    public static final double DRIVE_P = 0.5;
-    public static final double Drive_V = 0.0;
-    public static final double DRIVE_S = 0.0;
+    public static final double DRIVE_P = 10.0;
+    public static final double Drive_V = 1.3;
+    public static final double DRIVE_S = 0.45;
 
-    public static final double MAX_VOLTAGE_TEST = 2;
+    public static final double MAX_VOLTAGE_TEST = 3;
 
 
 

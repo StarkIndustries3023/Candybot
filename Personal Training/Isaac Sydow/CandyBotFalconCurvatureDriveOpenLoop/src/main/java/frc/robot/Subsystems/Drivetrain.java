@@ -49,6 +49,13 @@ public class Drivetrain extends SubsystemBase {
   private final GenericEntry vEntry = 
     Shuffleboard.getTab("Drive").add("Drive V", Constants.Drive_V).getEntry();
 
+  // private final GenericEntry maxCurveEntry = 
+  //   Shuffleboard.getTab("Drive").add("Max Curvature", Constants.MAX_CURVATURE).getEntry();
+  // private final GenericEntry maxSpeedEntry = 
+  //   Shuffleboard.getTab("Drive").add("Max Speed", Constants.MAX_SPEED).getEntry();
+  // private final GenericEntry maxVoltTestEntry = 
+  //   Shuffleboard.getTab("Drive").add("Max Voltage", Constants.MAX_VOLTAGE_TEST).getEntry();
+
   private final SendableChooser<DriveMode> driveModeChooser = new SendableChooser<>();
 
   
@@ -62,10 +69,13 @@ public class Drivetrain extends SubsystemBase {
     config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.5;
     config.Feedback.SensorToMechanismRatio = Constants.DRIVE_GEAR_RATIO / (Math.PI * Constants.WHEEL_DIAMETER);
 
-    rightMotor.getConfigurator().apply(config);
 
     config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     leftMotor.getConfigurator().apply(config);
+
+    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    rightMotor.getConfigurator().apply(config);
+
 
 
 
@@ -94,6 +104,11 @@ public class Drivetrain extends SubsystemBase {
    * @param curvature curvature in 1/m
    */
   public void driveCurvature(double throttle, double curvature){
+    if(Math.abs(throttle) < .05){
+      driveRaw(0, 0);
+      return;
+    }
+
     double velocity = throttle * Constants.MAX_SPEED;
     double omega = velocity * curvature * Constants.MAX_CURVATURE;
     
